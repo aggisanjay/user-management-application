@@ -1,54 +1,47 @@
-
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 class UserForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      department: "",
+      firstName: '',
+      lastName: '',
+      email: '',
+      department: '',
     };
   }
 
-  // Populate form data if editing a user
   componentDidMount() {
-    const { user } = this.props;
-    if (user) {
-      const [firstName, lastName] = user.name.split(" ");
+    if (this.props.user) {
+      const [firstName, lastName] = this.props.user.name.split(' ');
       this.setState({
-        firstName: firstName || "",
-        lastName: lastName || "",
-        email: user.email || "",
-        department: user.company?.name || "",
+        firstName: firstName || '',
+        lastName: lastName || '',
+        email: this.props.user.email || '',
+        department: this.props.user.company.name || '',
       });
     }
   }
 
-  // Handle input change
-  handleChange = (event) => {
-    const { name, value } = event.target;
+  handleChange = (e) => {
+    const { name, value } = e.target;
     this.setState({ [name]: value });
   };
 
-  // Handle form submission
-  handleSubmit = (event) => {
-    event.preventDefault();
+  handleSubmit = (e) => {
+    e.preventDefault();
     const { onSave, user } = this.props;
-    const { firstName, lastName, email, department } = this.state;
-
     onSave({
       id: user?.id,
-      name: `${firstName} ${lastName}`,
-      email,
-      company: { name: department },
+      name: `${this.state.firstName} ${this.state.lastName}`,
+      email: this.state.email,
+      company: { name: this.state.department },
     });
   };
 
   render() {
+    const { onCancel } = this.props;
     const { firstName, lastName, email, department } = this.state;
-    const { onCancel, user } = this.props;
 
     return (
       <form onSubmit={this.handleSubmit} className="user-form">
@@ -84,7 +77,7 @@ class UserForm extends Component {
           placeholder="Department"
           required
         />
-        <button type="submit">{user ? "Save Changes" : "Add User"}</button>
+        <button type="submit">{this.props.user ? 'Save Changes' : 'Add User'}</button>
         <button type="button" onClick={onCancel}>
           Cancel
         </button>
