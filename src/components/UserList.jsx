@@ -21,8 +21,8 @@ const UserList = ({ users, onDelete, onEdit, currentPage, totalPages, onPageChan
               <td>{user.email}</td>
               <td>{user.company.name}</td>
               <td>
-                <button onClick={() => onEdit(user)}>Edit</button>
-                <button onClick={() => onDelete(user.id)}>Delete</button>
+                <button className="edit" onClick={() => onEdit(user)}>Edit</button>
+                <button className="delete" onClick={() => onDelete(user.id)}>Delete</button>
               </td>
             </tr>
           ))}
