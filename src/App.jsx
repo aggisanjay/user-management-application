@@ -1,10 +1,8 @@
-
-
-import React, { Component, createRef } from "react";
-import UserList from "./components/UserList";
-import UserForm from "./components/UserForm";
-import axios from "axios";
-import "./styles/styles.css";
+import React, { Component, createRef } from 'react';
+import UserList from './components/UserList';
+import UserForm from './components/UserForm';
+import axios from 'axios';
+import './styles/styles.css';
 
 class App extends Component {
   constructor(props) {
@@ -14,7 +12,7 @@ class App extends Component {
       selectedUser: null, // For editing a user
       currentPage: 1,
       usersPerPage: 5,
-      error: "",
+      error: '',
       isAdding: false,
     };
     this.formRef = createRef(); // Ref for scrolling to form
@@ -24,69 +22,62 @@ class App extends Component {
     this.fetchUsers();
   }
 
-  // Fetch users from API
   fetchUsers = async () => {
     try {
-      const response = await axios.get("https://jsonplaceholder.typicode.com/users");
-      this.setState({ users: response.data });
+      const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+      const usersWithSNo = response.data.map((user, index) => ({
+        ...user,
+        sNo: index + 1,
+      }));
+      this.setState({ users: usersWithSNo });
     } catch (err) {
-      this.setState({ error: "Failed to fetch users. Please try again later." });
+      this.setState({ error: 'Failed to fetch users. Please try again later.' });
     }
   };
 
-  // Add a new user
   handleAddUser = async (newUser) => {
     try {
-      const response = await axios.post("https://jsonplaceholder.typicode.com/users", newUser);
-      this.setState((prevState) => ({
-        users: [...prevState.users, { ...newUser, id: response.data.id || prevState.users.length + 1 }],
-        isAdding: false,
-      }));
+      const response = await axios.post('https://jsonplaceholder.typicode.com/users', newUser);
+      const updatedUsers = [
+        ...this.state.users,
+        { ...newUser, id: response.data.id || this.state.users.length + 1 },
+      ].map((user, index) => ({ ...user, sNo: index + 1 })); // Recalculate S.No
+      this.setState({ users: updatedUsers, isAdding: false });
     } catch (err) {
-      this.setState({ error: "Failed to add user." });
+      this.setState({ error: 'Failed to add user.' });
     }
   };
 
-  // Edit an existing user
   handleEditUser = async (updatedUser) => {
     try {
       await axios.put(`https://jsonplaceholder.typicode.com/users/${updatedUser.id}`, updatedUser);
-      this.setState((prevState) => ({
-        users: prevState.users.map((user) =>
-          user.id === updatedUser.id ? updatedUser : user
-        ),
-        selectedUser: null,
-      }));
+      const updatedUsers = this.state.users
+        .map((user) => (user.id === updatedUser.id ? updatedUser : user))
+        .map((user, index) => ({ ...user, sNo: index + 1 })); // Recalculate S.No
+      this.setState({ users: updatedUsers, selectedUser: null });
     } catch (err) {
-      this.setState({ error: "Failed to update user." });
+      this.setState({ error: 'Failed to update user.' });
     }
   };
 
-  // Delete a user
   handleDeleteUser = async (id) => {
     try {
       await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
-      this.setState((prevState) => ({
-        users: prevState.users.filter((user) => user.id !== id),
-      }));
+      const updatedUsers = this.state.users
+        .filter((user) => user.id !== id)
+        .map((user, index) => ({ ...user, sNo: index + 1 })); // Recalculate S.No
+      this.setState({ users: updatedUsers });
     } catch (err) {
-      this.setState({ error: "Failed to delete user." });
+      this.setState({ error: 'Failed to delete user.' });
     }
   };
 
-  // Scroll to the form section
   scrollToForm = () => {
-    this.formRef.current.scrollIntoView({ behavior: "auto" });
-  };
-
-  // Handle page change
-  handlePageChange = (page) => {
-    this.setState({ currentPage: page });
+    this.formRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   render() {
     const { users, selectedUser, currentPage, usersPerPage, error, isAdding } = this.state;
-
     const totalPages = Math.ceil(users.length / usersPerPage);
     const currentUsers = users.slice(
       (currentPage - 1) * usersPerPage,
@@ -101,7 +92,7 @@ class App extends Component {
         <button
           onClick={() => {
             this.setState({ isAdding: true, selectedUser: null });
-            this.scrollToForm(); // Scroll to form
+            this.scrollToForm();
           }}
           className="add-user-btn"
         >
@@ -113,11 +104,11 @@ class App extends Component {
           onDelete={this.handleDeleteUser}
           onEdit={(user) => {
             this.setState({ selectedUser: user, isAdding: false });
-            this.scrollToForm(); // Scroll to form
+            this.scrollToForm();
           }}
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={this.handlePageChange}
+          onPageChange={(page) => this.setState({ currentPage: page })}
         />
 
         {/* Form Section */}
