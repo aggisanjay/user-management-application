@@ -21,28 +21,29 @@ const UserList = ({ users, onDelete, onEdit, currentPage, totalPages, onPageChan
               <td>{user.email}</td>
               <td>{user.company.name}</td>
               <td>
-                <button className="edit" onClick={() => onEdit(user)}>Edit</button>
-                <button className="delete" onClick={() => onDelete(user.id)}>Delete</button>
+                <button onClick={() => onEdit(user)}>Edit</button>
+                <button onClick={() => onDelete(user.id)}>Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
       <div className="pagination">
-        <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>
-          Prev
-        </button>
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
-        <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-          Next
-        </button>
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i + 1}
+            className={currentPage === i + 1 ? 'active' : ''}
+            onClick={() => onPageChange(i + 1)}
+          >
+            {i + 1}
+          </button>
+        ))}
       </div>
     </div>
   );
 };
 
 export default UserList;
+
 
 
