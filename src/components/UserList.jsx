@@ -29,21 +29,22 @@ const UserList = ({ users, onDelete, onEdit, currentPage, totalPages, onPageChan
         </tbody>
       </table>
       <div className="pagination">
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i + 1}
-            className={currentPage === i + 1 ? 'active' : ''}
-            onClick={() => onPageChange(i + 1)}
-          >
-            {i + 1}
-          </button>
-        ))}
+        <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>
+          Prev
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+          Next
+        </button>
       </div>
     </div>
   );
 };
 
 export default UserList;
+
 
 
 
