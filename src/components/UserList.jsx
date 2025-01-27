@@ -6,9 +6,8 @@ const UserList = ({ users, onDelete, onEdit, currentPage, totalPages, onPageChan
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
+            <th>S.No</th>
+            <th>Name</th>
             <th>Email</th>
             <th>Department</th>
             <th>Actions</th>
@@ -17,9 +16,8 @@ const UserList = ({ users, onDelete, onEdit, currentPage, totalPages, onPageChan
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.name.split(' ')[0]}</td>
-              <td>{user.name.split(' ')[1]}</td>
+              <td>{user.sNo}</td>
+              <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.company.name}</td>
               <td>
@@ -31,18 +29,20 @@ const UserList = ({ users, onDelete, onEdit, currentPage, totalPages, onPageChan
         </tbody>
       </table>
       <div className="pagination">
-  <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>
-    Previous
-  </button>
-  <span>Page {currentPage} of {totalPages}</span>
-  <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>
-    Next
-  </button>
-</div>
-
+        <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1}>
+          Prev
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
     </div>
   );
 };
 
 export default UserList;
+
 
